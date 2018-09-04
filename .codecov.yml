@@ -1,0 +1,4 @@
+coverage:
+  ignore:
+  - ".*EmileTests/.*"
+  - ".*Sample App/.*"
