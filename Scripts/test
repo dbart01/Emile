@@ -7,5 +7,5 @@ xcodebuild test \
 -project "Emile.xcodeproj" \
 -scheme "Emile" \
 -sdk iphonesimulator \
--destination "platform=iOS Simulator,name=iPhone 7,OS=11.4" \
+-destination "platform=iOS Simulator,name=iPhone 7,OS=11.0" \
  | xcpretty -c
