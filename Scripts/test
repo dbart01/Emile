@@ -1,0 +1,11 @@
+ #!/usr/bin/env bash
+
+set -ex
+set -eo pipefail
+
+xcodebuild test \
+-project "Emile.xcodeproj" \
+-scheme "Emile" \
+-sdk iphonesimulator \
+-destination "platform=iOS Simulator,name=iPhone 7,OS=11.4" \
+ | xcpretty -c
