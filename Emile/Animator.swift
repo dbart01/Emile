@@ -98,7 +98,8 @@ internal class Animator {
     
     private func tick() {
         guard let gif = self.gif else {
-            fatalError("[FATAL] Animator attempted a tick without a valid GIF.")
+            self.stop()
+            return
         }
         
         let currentTime = Milliseconds(fromTimestamp: self.timer.timestamp)

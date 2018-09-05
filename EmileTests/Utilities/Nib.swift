@@ -1,6 +1,6 @@
 //
-//  AnimatedImageView.swift
-//  Emile
+//  Nib.swift
+//  EmileTests
 //
 //  The MIT License (MIT)
 //
@@ -27,40 +27,11 @@
 
 import UIKit
 
-public class AnimatedImageView: UIImageView {
-
-    internal let animator = AnimatorProvider.shared.createAnimator()
-
-    public var gif: GIF? {
-        didSet {
-            self.animator.gif = self.gif
-        }
-    }
-
-    // MARK: - Init -
-
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        self.initialize()
-    }
-
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-
-        self.initialize()
-    }
-
-    private func initialize() {
-        self.animator.delegate = self
-    }
-}
-
-// MARK: - AnimatorDelegate -
-
-extension AnimatedImageView: AnimatorDelegate {
-    
-    func animator(_ animator: Animator, didUpdateImage image: CGImage, at index: Int) {
-        self.layer.contents = image
+enum Nib {
+    static func load<T>(name: String, type: T.Type) -> T {
+        let nib      = UINib(nibName: name, bundle: Bundle.testBundle)
+        let contents = nib.instantiate(withOwner: self, options: nil)
+        
+        return contents.first as! T
     }
 }

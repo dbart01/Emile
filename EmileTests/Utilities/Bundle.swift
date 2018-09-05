@@ -1,6 +1,6 @@
 //
-//  AnimatedImageView.swift
-//  Emile
+//  Bundle.swift
+//  EmileTests
 //
 //  The MIT License (MIT)
 //
@@ -25,42 +25,11 @@
 //  SOFTWARE.
 //
 
-import UIKit
+import Foundation
 
-public class AnimatedImageView: UIImageView {
-
-    internal let animator = AnimatorProvider.shared.createAnimator()
-
-    public var gif: GIF? {
-        didSet {
-            self.animator.gif = self.gif
-        }
-    }
-
-    // MARK: - Init -
-
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        self.initialize()
-    }
-
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-
-        self.initialize()
-    }
-
-    private func initialize() {
-        self.animator.delegate = self
-    }
-}
-
-// MARK: - AnimatorDelegate -
-
-extension AnimatedImageView: AnimatorDelegate {
+extension Bundle {
     
-    func animator(_ animator: Animator, didUpdateImage image: CGImage, at index: Int) {
-        self.layer.contents = image
-    }
+    static let testBundle = Bundle(for: TestClass.self)
 }
+
+private class TestClass {}

@@ -1,5 +1,5 @@
 //
-//  AnimatedImageView.swift
+//  AnimatorProvider.swift
 //  Emile
 //
 //  The MIT License (MIT)
@@ -27,40 +27,17 @@
 
 import UIKit
 
-public class AnimatedImageView: UIImageView {
-
-    internal let animator = AnimatorProvider.shared.createAnimator()
-
-    public var gif: GIF? {
-        didSet {
-            self.animator.gif = self.gif
-        }
-    }
-
-    // MARK: - Init -
-
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        self.initialize()
-    }
-
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-
-        self.initialize()
-    }
-
-    private func initialize() {
-        self.animator.delegate = self
-    }
-}
-
-// MARK: - AnimatorDelegate -
-
-extension AnimatedImageView: AnimatorDelegate {
+internal class AnimatorProvider {
     
-    func animator(_ animator: Animator, didUpdateImage image: CGImage, at index: Int) {
-        self.layer.contents = image
+    static var shared = AnimatorProvider()
+    
+    // MARK: - Init -
+    
+    internal init() {}
+    
+    // MARK: - Animator -
+    
+    internal func createAnimator() -> Animator {
+        return Animator()
     }
 }
