@@ -1,5 +1,5 @@
 //
-//  TestAnimator.swift
+//  TestTimer.swift
 //  EmileTests
 //
 //  The MIT License (MIT)
@@ -28,19 +28,49 @@
 import Foundation
 @testable import Emile
 
-class TestAnimator: Animator {
+class TestTimer: TimerType {
     
-    static let shared: TestAnimator = TestAnimator()
+    private var target:   Any?
+    private let selector: Selector
+    
+    // MARK: - TimerType -
+    
+    var timestamp: CFTimeInterval
+    
+    var isPaused: Bool
+    
+    func add(to runLoop: RunLoop, forMode mode: RunLoopMode) {}
+    
+    func invalidate() {
+        self.target = nil
+    }
     
     // MARK: - Init -
     
-    override init(timerProvider: TimerProvider = TimerProvider()) {
-        super.init(timerProvider: timerProvider)
+    required init(target: Any, selector: Selector) {
+        self.timestamp = 0
+        self.target    = target
+        self.selector  = selector
+        self.isPaused  = false
     }
     
-    // MARK: - Invocation -
+    static private(set) var shared: TestTimer = TestTimer(target: TestTarget(), selector: #selector(testSelector))
     
-    func invokeDelegate(using image: CGImage, index: Int) {
-        self.delegate?.animator(self, didUpdateImage: image, at: index)
+    static func createShared(target: Any, selector: Selector) -> TestTimer {
+        let timer = TestTimer(target: target, selector: selector)
+        self.shared = timer
+        return timer
     }
+    
+    // MARK: - Tick -
+    
+    func invokeTick() {
+        (self.target as? NSObject)?.performSelector(onMainThread: self.selector, with: nil, waitUntilDone: true)
+    }
+    
+    // MARK: - Selector -
+    
+    @objc private func testSelector() {}
 }
+
+private class TestTarget {}

@@ -41,6 +41,12 @@ class AnimatedImageViewTests: XCTestCase {
         AnimatorProvider.shared = TestAnimatorProvider()
     }
     
+    override func tearDown() {
+        super.tearDown()
+        
+        AnimatorProvider.shared = AnimatorProvider()
+    }
+    
     // MARK: - Test Init -
  
     func testInitWithFrame() {

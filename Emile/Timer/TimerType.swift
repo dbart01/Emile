@@ -1,6 +1,6 @@
 //
-//  TestAnimator.swift
-//  EmileTests
+//  TimerType.swift
+//  Emile
 //
 //  The MIT License (MIT)
 //
@@ -26,21 +26,16 @@
 //
 
 import Foundation
-@testable import Emile
 
-class TestAnimator: Animator {
+internal protocol TimerType: class {
     
-    static let shared: TestAnimator = TestAnimator()
+    var timestamp: CFTimeInterval { get }
     
-    // MARK: - Init -
+    var isPaused: Bool { get set }
     
-    override init(timerProvider: TimerProvider = TimerProvider()) {
-        super.init(timerProvider: timerProvider)
-    }
+    init(target: Any, selector: Selector)
     
-    // MARK: - Invocation -
+    func add(to runLoop: RunLoop, forMode mode: RunLoopMode)
     
-    func invokeDelegate(using image: CGImage, index: Int) {
-        self.delegate?.animator(self, didUpdateImage: image, at: index)
-    }
+    func invalidate()
 }

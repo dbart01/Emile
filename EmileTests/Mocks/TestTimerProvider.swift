@@ -1,5 +1,5 @@
 //
-//  TestAnimator.swift
+//  TestTimerProvider.swift
 //  EmileTests
 //
 //  The MIT License (MIT)
@@ -28,19 +28,13 @@
 import Foundation
 @testable import Emile
 
-class TestAnimator: Animator {
+class TestTimerProvider: TimerProvider {
     
-    static let shared: TestAnimator = TestAnimator()
-    
-    // MARK: - Init -
-    
-    override init(timerProvider: TimerProvider = TimerProvider()) {
-        super.init(timerProvider: timerProvider)
+    override init() {
+        super.init()
     }
     
-    // MARK: - Invocation -
-    
-    func invokeDelegate(using image: CGImage, index: Int) {
-        self.delegate?.animator(self, didUpdateImage: image, at: index)
+    override func createTimer(target: Any, selector: Selector) -> TimerType {
+        return TestTimer.createShared(target: target, selector: selector)
     }
 }

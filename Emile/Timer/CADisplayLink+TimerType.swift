@@ -1,6 +1,6 @@
 //
-//  EmileTests.swift
-//  EmileTests
+//  CADisplayLink+TimerType.swift
+//  Emile
 //
 //  The MIT License (MIT)
 //
@@ -25,9 +25,6 @@
 //  SOFTWARE.
 //
 
-import XCTest
-import Emile
+import Foundation
 
-class EmileTests: XCTestCase {
-    
-}
+extension CADisplayLink: TimerType {}

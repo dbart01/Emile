@@ -45,20 +45,20 @@ internal class Animator {
         }
     }
     
-    private let target: Target
-    private let timer:  CADisplayLink
+    private let proxy: ActionProxy
+    private let timer: TimerType
     
     private var frameStartTime: Milliseconds = .idle
-    private var currentImageIndex: Index = 0
+    private var currentImageIndex: Index = .prestart
     private var loops: Int = 0
     
     // MARK: - Init -
     
-    internal init() {
-        self.target = Target()
-        self.timer  = CADisplayLink(target: self.target, selector: self.target.selector)
+    internal init(timerProvider: TimerProvider = TimerProvider()) {
+        self.proxy = ActionProxy()
+        self.timer = timerProvider.createTimer(target: self.proxy, selector: self.proxy.selector)
         
-        self.target.block = { [weak self] in
+        self.proxy.block = { [weak self] in
             self?.tick()
         }
         
@@ -134,30 +134,51 @@ internal class Animator {
     }
     
     private func isCurrentFrameExpired(from time: Milliseconds) -> Bool {
-        guard let gif = self.gif else {
-            fatalError("[FATAL] Animator attempted a tick without a valid GIF.")
-        }
+        assert(self.gif != nil, "[FATAL] Animator attempted a tick without a valid GIF.")
         
-        let properties = gif.properties(at: self.currentImageIndex)
+        let properties = self.gif!.properties(at: self.currentImageIndex)
         let deltaTime  = time - self.frameStartTime
         
         return deltaTime > properties.delayTime
     }
 }
 
-// MARK: - Target -
+// MARK: - Testing Support -
+#if TESTING
 
 extension Animator {
-    private class Target: NSObject {
-        
-        var block: (() -> Void)?
-        
-        let selector = #selector(action)
-        
-        // MARK: - Action -
-        
-        @objc func action() {
-            self.block?()
-        }
+    struct State {
+        let proxy:             ActionProxy
+        let timer:             TimerType
+        let frameStartTime:    Milliseconds
+        let currentImageIndex: Index
+        let loops:             Int
     }
 }
+
+extension Animator {
+    
+    func testStart() {
+        self.start()
+    }
+    
+    func testStop() {
+        self.stop()
+    }
+    
+    func testReset() {
+        self.reset()
+    }
+    
+    var testingState: State {
+        return Animator.State(
+            proxy:             self.proxy,
+            timer:             self.timer,
+            frameStartTime:    self.frameStartTime,
+            currentImageIndex: self.currentImageIndex,
+            loops:             self.loops
+        )
+    }
+}
+
+#endif
